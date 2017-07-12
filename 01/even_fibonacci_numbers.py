@@ -1,3 +1,5 @@
+import sys
+
 class FibNum:
 	def __init__(self, max):
 		self.max = max
@@ -14,4 +16,4 @@ class FibNum:
 		self.a, self.b = self.b, self.a + self.b
 		return fib
 
-print reduce((lambda x, y: x + y), filter(lambda x: x % 2 == 0, FibNum(4000000)))
+print reduce((lambda x, y: x + y), filter(lambda x: x % 2 == 0, FibNum(long(sys.argv[1]))))
