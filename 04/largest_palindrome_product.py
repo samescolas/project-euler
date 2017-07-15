@@ -20,21 +20,3 @@ for num in palindromes:
                 str(i),
                 num)
             sys.exit(0)
-
-
-
-'''
-while True:
-    print 'testing {} and {}...'.format(largest_number, (largest_number - offset))
-    if is_palindrome(largest_number * (largest_number - offset)):
-        print 'palindrome {} is a product of {} and {}'.format(
-            largest_number * (largest_number - offset),
-            largest_number - offset,
-            largest_number)
-        break
-    elif largest_number * (largest_number - offset - 1) < (largest_number - 1) * largest_number:
-        offset = 0
-        largest_number -= 1
-    else:
-        offset += 1
-'''
