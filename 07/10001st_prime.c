@@ -27,6 +27,7 @@ long long	get_prime(int nth)
 			return (prime);
 		++prime;
 	}
+	return (0);
 }
 
 int		is_prime(long long n)
@@ -35,7 +36,7 @@ int		is_prime(long long n)
 	long long ubound = (long long)sqrtl(n) + 1;
 
 	while (++search < ubound)
-		if (n %  search == 0)
+		if (n % search == 0)
 			return (0);
 	return (1);
 }
