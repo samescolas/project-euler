@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 grid = [[8,2,22,97,38,15,0,40,0,75,4,5,7,78,52,12,50,77,91,8],
 [49,49,99,40,17,81,18,57,60,87,17,40,98,43,69,48,4,56,62,0],
 [81,49,31,73,55,79,14,29,93,71,40,67,53,88,30,3,49,13,36,65],
@@ -8,7 +9,7 @@ grid = [[8,2,22,97,38,15,0,40,0,75,4,5,7,78,52,12,50,77,91,8],
 [32,98,81,28,64,23,67,10,26,38,40,67,59,54,70,66,18,38,64,70],
 [67,26,20,68,02,62,12,20,95,63,94,39,63,8,40,91,66,49,94,21],
 [24,55,58,5,66,73,99,26,97,17,78,78,96,83,14,88,34,89,63,72],
-[21,36,23,9,75,00,76,44,20,45,35,14,00,61,33,97,34,31,33,95],
+[21,36,23,9,75,0,76,44,20,45,35,14,00,61,33,97,34,31,33,95],
 [78,17,53,28,22,75,31,67,15,94,3,80,4,62,16,14,9,53,56,92],
 [16,39,5,42,96,35,31,47,55,58,88,24,00,17,54,24,36,29,85,57],
 [86,56,00,48,35,71,89,7,5,44,44,37,44,60,21,58,51,54,17,58],
@@ -20,6 +21,79 @@ grid = [[8,2,22,97,38,15,0,40,0,75,4,5,7,78,52,12,50,77,91,8],
 [20,73,35,29,78,31,90,1,74,31,49,71,48,86,81,16,23,57,5,54],
 [1,70,54,71,83,51,54,69,16,92,33,48,61,43,52,1,89,19,67,48]]
 
-for r in xrange(len(grid)):
-	for c in xrange(len(grid[0])):
-		print grid[r][c]
+ROW = 0
+COL = 1
+DIAG = 2
+
+def max_in_4x4(mat, max):
+	changed = False
+
+	for dir in range(3): 
+		changed = changed or get_max_prod(dir, mat, max)
+	return changed
+
+def get_max_prod(dir, vals, max):
+	def get_prod(nums, max):
+		if (len(nums) < 4):
+			return 0
+		test = reduce(lambda x,y: x*y, nums)
+		if test > max['val']:
+			max['val'] = test
+			max['items'] = nums[:]
+			return True
+		return False
+
+	if (dir == DIAG):
+		val1 = get_prod([vals[0][0], vals[1][1], vals[2][2], vals[3][3]], max)
+		val2 = get_prod([vals[0][3], vals[1][2], vals[2][1], vals[3][0]], max)
+		if val2:
+			max['offset'] = 1
+			max['dir'] = DIAG
+			return True
+		elif val1:
+			max['offset'] = 0
+			max['dir'] = DIAG
+			return True
+		return False
+	
+	changed = False
+	for i in range(4):
+		if dir == ROW:
+			if get_prod(vals[i], max):
+				changed = True
+				max['offset'] += i
+				max['dir'] = dir
+		elif dir == COL:
+			if get_prod([row[i] for row in vals], max):
+				changed = True
+				max['offset'] += i
+				max['dir'] = dir
+	return changed
+
+test_list = [row[0:4] for row in grid[0:4]]
+max = {
+	'row': 0,
+	'col': 0,
+	'val': 0,
+	'dir': 0,
+	'offset': 0,
+	'items': []
+}
+
+max_ix = [0, 0]
+max_in_4x4(test_list, max)
+row_range = len(grid[0]) - 3
+col_range = len(grid) - 3
+
+
+for row_ix in xrange(row_range):
+	for col_ix in xrange(col_range):
+		test_list = [r[col_ix:(col_ix + 4)] for r in grid[row_ix:(row_ix + 4)]]
+		if max_in_4x4(test_list, max):
+			max['row'] = row_ix
+			max['col'] = col_ix
+
+print max
+
+for row in grid:
+	print row
