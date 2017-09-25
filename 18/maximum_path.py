@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 grid = [
+	[75],
 	[95, 64],
 	[17,47,82],
 	[18,35,87,10],
@@ -17,4 +18,15 @@ grid = [
 	[4,62,98,27,23,9,70,98,73,93,38,53,60,4,23]
 ]
 
-# Greedy agorithm doesn't work...memoization? It seems like we have to test all paths up to a certain point.
+# Create copy of grid to store partial sums as we make our way up the grid.
+store = grid[:]
+
+# Loop through rows in grid from bottom to top starting at second-to-last row.
+for i,row in enumerate(reversed(grid[:-1])):
+	add = []
+	# Store partial sums of current row and row below it.
+	for j,val in enumerate(row):
+		add.append(val + max(store[-1 - i][j], store[-1 - i][j+1]))
+	store[-2 - i] = add
+
+print("Maximum path: {}".format(store[0][0]))
